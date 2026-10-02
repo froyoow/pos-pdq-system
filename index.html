@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDQ POS Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="catalog-panel">
+        <div class="brand-block">
+          <div class="brand-icon">P</div>
+          <div>
+            <p class="eyebrow">Retail POS</p>
+            <h1>PDQ Terminal</h1>
+          </div>
+        </div>
+
+        <div class="currency-switcher">
+          <label>Currency</label>
+          <div class="currency-buttons" aria-label="currency switcher">
+            <button class="currency-btn active" data-currency="USD" type="button">USD</button>
+            <button class="currency-btn" data-currency="EUR" type="button">EUR</button>
+          </div>
+        </div>
+
+        <div class="catalog-header">
+          <h2>Products</h2>
+        </div>
+
+        <div id="productList" class="product-list"></div>
+      </aside>
+
+      <main class="checkout-panel">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Sale</p>
+            <h2>Checkout</h2>
+          </div>
+          <div class="order-badge">
+            <span>Order</span>
+            <strong id="orderNumber">#1042</strong>
+          </div>
+        </div>
+
+        <section class="cart-card">
+          <div class="section-title-row">
+            <h3>Cart</h3>
+            <button id="clearCartBtn" class="text-btn" type="button">Clear cart</button>
+          </div>
+
+          <div id="cartItems" class="cart-items"></div>
+
+          <div class="summary-box">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <strong id="subtotalValue">$0.00</strong>
+            </div>
+            <div class="summary-row">
+              <span>Tax</span>
+              <strong id="taxValue">$0.00</strong>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total</span>
+              <strong id="totalValue">$0.00</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="payment-card">
+          <div class="section-title-row payment-header">
+            <h3>Payment</h3>
+            <span class="accepted-chip">Visa / Mastercard</span>
+          </div>
+
+          <form id="paymentForm">
+            <div class="form-grid">
+              <label class="field full-width">
+                <span>Cardholder name</span>
+                <input type="text" id="cardName" placeholder="John Smith" required />
+              </label>
+
+              <label class="field full-width">
+                <span>Card number</span>
+                <input type="text" id="cardNumber" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" required />
+              </label>
+
+              <label class="field">
+                <span>Expiry</span>
+                <input type="text" id="expiry" maxlength="5" placeholder="MM/YY" required />
+              </label>
+
+              <label class="field">
+                <span>CVV</span>
+                <input type="password" id="cvv" inputmode="numeric" maxlength="4" placeholder="123" required />
+              </label>
+            </div>
+
+            <div class="cta-row">
+              <button type="submit" class="pay-btn">Process payment</button>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <aside class="terminal-panel">
+        <div class="terminal-header">
+          <span class="status-dot"></span>
+          <span>PDQ Device</span>
+        </div>
+
+        <div class="terminal-screen">
+          <div class="screen-header">
+            <span>Transaction</span>
+            <span id="terminalCurrency" class="screen-currency">USD</span>
+          </div>
+
+          <div id="terminalMessage" class="terminal-message active">
+            Ready for card payment
+          </div>
+
+          <div id="transactionDetails" class="transaction-details">
+            <div class="detail-row">
+              <span>Amount</span>
+              <strong id="terminalAmount">$0.00</strong>
+            </div>
+            <div class="detail-row">
+              <span>Card</span>
+              <strong id="terminalCard">--</strong>
+            </div>
+            <div class="detail-row">
+              <span>Ref</span>
+              <strong id="terminalRef">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="receipt-box">
+          <h3>Receipt</h3>
+          <div id="receiptContent" class="receipt-content">
+            <p>No transaction yet.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
