@@ -3,285 +3,137 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDQ POS Terminal</title>
+    <title>Eastern Protocols - Crypto Payout</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="catalog-panel">
-        <div class="brand-block">
-          <div class="brand-icon">P</div>
-          <div>
-            <p class="eyebrow">Retail POS</p>
-            <h1>PDQ Terminal</h1>
-          </div>
+    <div class="shell">
+      <header class="topbar">
+        <div>
+          <p class="small-label">Eastern Protocols</p>
+          <h1>Payment terminal</h1>
         </div>
-
-        <div class="currency-switcher">
-          <label>Currency</label>
-          <div class="currency-buttons" aria-label="currency switcher">
-            <button class="currency-btn active" data-currency="USD" type="button">USD</button>
-            <button class="currency-btn" data-currency="EUR" type="button">EUR</button>
-          </div>
+        <div class="mode-box">
+          <span class="small-label">Mode</span>
+          <strong>Crypto payout</strong>
         </div>
+      </header>
 
-        <div class="catalog-header">
-          <h2>Products</h2>
-        </div>
-
-        <div id="productList" class="product-list"></div>
-      </aside>
-
-      <main class="checkout-panel">
-        <div class="topbar">
-          <div>
-            <p class="eyebrow">Sale</p>
-            <h2>Checkout</h2>
-          </div>
-          <div class="order-badge">
-            <span>Order</span>
-            <strong id="orderNumber">#1042</strong>
-          </div>
-        </div>
-
-        <section class="cart-card">
-          <div class="section-title-row">
-            <h3>Cart</h3>
-            <button id="clearCartBtn" class="text-btn" type="button">Clear cart</button>
+      <main class="layout">
+        <section class="panel left-panel">
+          <div class="section-head">
+            <h2>Sale</h2>
+            <span id="totalValue" class="total">Total $0.00</span>
           </div>
 
-          <div id="cartItems" class="cart-items"></div>
+          <div id="productList" class="product-list"></div>
+        </section>
 
-          <div class="summary-box">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <strong id="subtotalValue">$0.00</strong>
+        <section class="panel center-panel">
+          <div class="cart-wrap">
+            <div class="section-head small-head">
+              <h3>Cart</h3>
+              <button id="clearCartBtn" class="ghost-btn" type="button">Clear</button>
             </div>
-            <div class="summary-row">
-              <span>Tax</span>
-              <strong id="taxValue">$0.00</strong>
-            </div>
-            <div class="summary-row total-row">
-              <span>Total</span>
-              <strong id="totalValue">$0.00</strong>
+
+            <div id="cartItems" class="cart-items"></div>
+
+            <div class="summary-box">
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <strong id="subtotalValue">$0.00</strong>
+              </div>
+              <div class="summary-row">
+                <span>Tax</span>
+                <strong id="taxValue">$0.00</strong>
+              </div>
+              <div class="summary-row total-row">
+                <span>Total</span>
+                <strong id="grandTotalValue">$0.00</strong>
+              </div>
             </div>
           </div>
         </section>
 
-        <section class="payment-card">
-          <div class="section-title-row payment-header">
-            <h3>Payment</h3>
-            <span class="accepted-chip">Visa / Mastercard</span>
+        <section class="panel right-panel">
+          <div class="payment-box">
+            <div class="section-head small-head">
+              <h3>Payment</h3>
+              <span class="chip">Crypto only</span>
+            </div>
+
+            <form id="cryptoForm">
+              <label class="field">
+                <span>Wallet address</span>
+                <input id="walletAddress" type="text" placeholder="0x..." required />
+              </label>
+
+              <label class="field">
+                <span>Network</span>
+                <select id="networkSelect" required>
+                  <option value="ETH">Ethereum</option>
+                  <option value="USDT">Tether (USDT)</option>
+                  <option value="BTC">Bitcoin</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Amount</span>
+                <input id="cryptoAmount" type="text" placeholder="0.05 ETH" required />
+              </label>
+
+              <label class="field">
+                <span>Approval code</span>
+                <input id="approvalCode" type="text" placeholder="APP-0001" required />
+              </label>
+
+              <div class="rate-note">Demo rate: $1 = €0.92</div>
+
+              <button class="submit-btn" type="submit">Process payout</button>
+            </form>
           </div>
 
-          <form id="paymentForm">
-            <div class="form-grid">
-              <label class="field full-width">
-                <span>Cardholder name</span>
-                <input type="text" id="cardName" placeholder="John Smith" required />
-              </label>
-
-              <label class="field full-width">
-                <span>Card number</span>
-                <input type="text" id="cardNumber" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" required />
-              </label>
-
-              <label class="field">
-                <span>Expiry</span>
-                <input type="text" id="expiry" maxlength="5" placeholder="MM/YY" required />
-              </label>
-
-              <label class="field">
-                <span>CVV</span>
-                <input type="password" id="cvv" inputmode="numeric" maxlength="4" placeholder="123" required />
-              </label>
+          <div class="terminal-box">
+            <div class="terminal-header">
+              <span class="status-dot"></span>
+              <span>Terminal</span>
             </div>
-
-            <div class="cta-row">
-              <button type="submit" class="pay-btn">Process payment</button>
-            </div>
-          </form>
+            <div id="terminalMessage" class="terminal-message idle">Awaiting payout</div>
+          </div>
         </section>
       </main>
 
-      <aside class="terminal-panel">
-        <div class="terminal-header">
-          <span class="status-dot"></span>
-          <span>PDQ Device</span>
+      <section class="store-panel panel">
+        <div class="section-head small-head">
+          <h3>Transaction store</h3>
         </div>
 
-        <div class="terminal-screen">
-          <div class="screen-header">
-            <span>Transaction</span>
-            <span id="terminalCurrency" class="screen-currency">USD</span>
-          </div>
-
-          <div id="terminalMessage" class="terminal-message active">
-            Ready for card payment
-          </div>
-
-          <div id="transactionDetails" class="transaction-details">
-            <div class="detail-row">
-              <span>Amount</span>
-              <strong id="terminalAmount">$0.00</strong>
-            </div>
-            <div class="detail-row">
-              <span>Card</span>
-              <strong id="terminalCard">--</strong>
-            </div>
-            <div class="detail-row">
-              <span>Ref</span>
-              <strong id="terminalRef">--</strong>
-            </div>
-          </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Mode</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Stored wallet data</th>
+                <th>Approval code</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="transactionTableBody">
+              <tr>
+                <td colspan="7" class="empty-row">No sales yet. Take a payment to fill the store.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        <div class="receipt-box">
-          <h3>Receipt</h3>
-          <div id="receiptContent" class="receipt-content">
-            <p>No transaction yet.</p>
-          </div>
-        </div>
-      </aside>
+      </section>
     </div>
 
     <script src="script.js"></script>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
