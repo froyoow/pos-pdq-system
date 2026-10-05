@@ -8,42 +8,150 @@ const products = [
 ];
 
 let cart = [];
+let planCart = [];
+let cryptoCart = [];
 let transactions = [];
 
-function renderProducts() {
-  const list = document.getElementById('productList');
-  list.innerHTML = products.map(p => `
-    <div class="product-item">
-      <div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-price">$${p.price.toFixed(2)}</div>
+const testCards = {
+  '5555555555554444': { type: 'Mastercard', status: 'approved' },
+  '4242424242424242': { type: 'Visa', status: 'approved' },
+  '4000000000000002': { type: 'Card', status: 'declined' }
+};
+
+function initProducts() {
+  ['productList', 'planProductList', 'cryptoProductList'].forEach(id => {
+    const list = document.getElementById(id);
+    list.innerHTML = products.map(p => `
+      <div class="product-item">
+        <div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-price">$${p.price.toFixed(2)}</div>
+        </div>
+        <button class="product-btn" onclick="addToCart('${id}', ${p.id})">Add</button>
       </div>
-      <button class="product-btn" onclick="addToCart(${p.id})">Add</button>
-    </div>
-  `).join('');
+    `).join('');
+  });
 }
 
-function addToCart(id) {
+function addToCart(listId, id) {
   const product = products.find(p => p.id === id);
+  let cart;
+  let totalElem;
+
+  if (listId === 'productList') {
+    cart = window.cart;
+    totalElem = 'saleTotal';
+  } else if (listId === 'planProductList') {
+    cart = window.planCart;
+    totalElem = 'planSaleTotal';
+  } else {
+    cart = window.cryptoCart;
+    totalElem = 'cryptoTotal';
+  }
+
   const existing = cart.find(c => c.id === id);
   if (existing) {
     existing.qty += 1;
   } else {
     cart.push({ id, qty: 1, price: product.price });
   }
-  updateTotal();
+
+  updateTotal(totalElem, cart);
 }
 
-function updateTotal() {
+function updateTotal(elemId, cart) {
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  document.getElementById('saleTotal').textContent = `$${total.toFixed(2)}`;
+  document.getElementById(elemId).textContent = `$${total.toFixed(2)}`;
 }
 
-document.getElementById('paymentForm').addEventListener('submit', (e) => {
+// TAB SWITCHING
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tabName = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+  });
+});
+
+// CARD FORM
+document.getElementById('cardForm').addEventListener('submit', (e) => {
   e.preventDefault();
 
   if (!cart.length) {
     alert('Cart is empty');
+    return;
+  }
+
+  const name = document.getElementById('cardName').value.trim();
+  const cardNum = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+  const expiry = document.getElementById('expiry').value;
+  const cvv = document.getElementById('cvv').value;
+
+  if (!name || !cardNum || !expiry || !cvv) {
+    alert('Please fill all fields');
+    return;
+  }
+
+  const cardInfo = testCards[cardNum];
+  if (!cardInfo) {
+    addTransaction('Card', 'Payment', cart, cardNum, 'N/A', 'Declined');
+    alert('Card declined - invalid test card');
+    return;
+  }
+
+  if (cardInfo.status === 'declined') {
+    addTransaction('Card', 'Payment', cart, cardNum, 'N/A', 'Declined');
+    alert('Card declined');
+    return;
+  }
+
+  addTransaction('Card', 'Payment', cart, cardNum.slice(-4), 'N/A', 'Approved');
+  cart = [];
+  updateTotal('saleTotal', cart);
+  document.getElementById('cardForm').reset();
+});
+
+// PAYMENT PLAN FORM
+document.getElementById('planForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (!planCart.length) {
+    alert('Cart is empty');
+    return;
+  }
+
+  const name = document.getElementById('planCardName').value.trim();
+  const cardNum = document.getElementById('planCardNumber').value.replace(/\s+/g, '');
+  const expiry = document.getElementById('planExpiry').value;
+  const cvv = document.getElementById('planCvv').value;
+  const installments = document.getElementById('installments').value;
+
+  if (!name || !cardNum || !expiry || !cvv) {
+    alert('Please fill all fields');
+    return;
+  }
+
+  const cardInfo = testCards[cardNum];
+  if (!cardInfo || cardInfo.status === 'declined') {
+    addTransaction('Plan', `Payment (${installments}x)`, planCart, cardNum, 'N/A', 'Declined');
+    alert('Card declined');
+    return;
+  }
+
+  addTransaction('Plan', `Payment (${installments}x)`, planCart, cardNum.slice(-4), 'N/A', 'Approved');
+  planCart = [];
+  updateTotal('planSaleTotal', planCart);
+  document.getElementById('planForm').reset();
+});
+
+// CRYPTO PAYOUT FORM
+document.getElementById('cryptoForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  if (!cryptoCart.length) {
+    alert('Payout amount is empty');
     return;
   }
 
@@ -57,25 +165,29 @@ document.getElementById('paymentForm').addEventListener('submit', (e) => {
     return;
   }
 
+  addTransaction('Crypto', `Payout (${network})`, cryptoCart, wallet.substring(0, 12) + '...', approvalCode, 'Approved');
+  cryptoCart = [];
+  updateTotal('cryptoTotal', cryptoCart);
+  document.getElementById('cryptoForm').reset();
+});
+
+function addTransaction(mode, type, cart, account, code, status) {
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const timestamp = new Date().toLocaleTimeString();
 
   const tx = {
     time: timestamp,
-    mode: 'Crypto',
-    type: 'Deposit',
+    mode: mode,
+    type: type,
     amount: `$${total.toFixed(2)}`,
-    wallet: wallet.substring(0, 12) + '...',
-    approvalCode: approvalCode,
-    status: 'Approved'
+    account: account,
+    code: code !== 'N/A' ? code : '--',
+    status: status
   };
 
   transactions.push(tx);
   renderTransactions();
-  cart = [];
-  updateTotal();
-  document.getElementById('paymentForm').reset();
-});
+}
 
 function renderTransactions() {
   const tbody = document.getElementById('txTable');
@@ -89,11 +201,14 @@ function renderTransactions() {
       <td>${tx.mode}</td>
       <td>${tx.type}</td>
       <td>${tx.amount}</td>
-      <td>${tx.wallet}</td>
-      <td>${tx.approvalCode}</td>
+      <td>${tx.account}</td>
+      <td>${tx.code}</td>
       <td>${tx.status}</td>
     </tr>
   `).join('');
 }
 
-renderProducts();
+initProducts();
+updateTotal('saleTotal', cart);
+updateTotal('planSaleTotal', planCart);
+updateTotal('cryptoTotal', cryptoCart);

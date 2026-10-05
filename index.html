@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eastern Protocols - Crypto Payout</title>
+  <title>Eastern Protocols - Payment Gateway</title>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -12,59 +12,166 @@
     <header class="page-header">
       <div class="header-left">
         <p class="label">Eastern Protocols</p>
-        <h1>Payment terminal</h1>
+        <h1>Payment Terminal</h1>
       </div>
       <div class="header-right">
-        <div class="mode-label">
+        <div class="mode-box">
           <p class="label">Mode</p>
-          <p class="value">Crypto deposit</p>
+          <p class="value">Sale</p>
         </div>
       </div>
     </header>
 
-    <div class="columns">
-      <section class="col sale-col">
-        <h2>Sale</h2>
-        <p class="total-line">Total<span id="saleTotal">$0.00</span></p>
-        <div id="productList" class="products"></div>
-      </section>
-
-      <section class="col payment-col">
-        <h2>Payment</h2>
-        <p class="accept-label">Crypto deposit only</p>
-
-        <form id="paymentForm" class="payment-form">
-          <div class="form-group">
-            <label>Wallet address</label>
-            <input type="text" id="walletAddr" placeholder="0x..." required />
-          </div>
-
-          <div class="form-group">
-            <label>Network</label>
-            <select id="network" required>
-              <option value="ETH">Ethereum</option>
-              <option value="USDT">Tether (USDT)</option>
-              <option value="BTC">Bitcoin</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Crypto amount</label>
-            <input type="text" id="cryptoAmount" placeholder="0.05" required />
-          </div>
-
-          <div class="form-group">
-            <label>Approval code</label>
-            <input type="text" id="approvalCode" placeholder="APP-0001" required />
-          </div>
-
-          <p class="note">Demo rate: $1 = €0.92</p>
-
-          <button class="btn-submit" type="submit">Process payout</button>
-        </form>
-      </section>
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="payment-methods">Payment Methods</button>
+      <button class="tab-btn" data-tab="payment-plans">Payment Plans</button>
+      <button class="tab-btn" data-tab="crypto-payout">Crypto Payout</button>
     </div>
 
+    <!-- PAYMENT METHODS TAB -->
+    <div id="payment-methods" class="tab-content active">
+      <div class="columns">
+        <section class="col sale-col">
+          <h2>Sale</h2>
+          <p class="total-line">Total<span id="saleTotal">$0.00</span></p>
+          <div id="productList" class="products"></div>
+        </section>
+
+        <section class="col payment-col">
+          <h2>Payment</h2>
+          <p class="accept-label">Visa / Mastercard</p>
+
+          <form id="cardForm" class="payment-form">
+            <div class="form-group">
+              <label>Cardholder name</label>
+              <input type="text" id="cardName" placeholder="John Smith" required />
+            </div>
+
+            <div class="form-group">
+              <label>Card number (test cards only)</label>
+              <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry</label>
+                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="4" required />
+              </div>
+            </div>
+
+            <p class="note">Accepted test cards: 5555 5555 5555 4444 (Mastercard), 4242 4242 4242 4242 (Visa), 4000 0000 0000 0002 (always declined). Any other number is refused in both modes. Demo rate: $1 = €0.92.</p>
+
+            <button class="btn-submit" type="submit">Process payment</button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <!-- PAYMENT PLANS TAB -->
+    <div id="payment-plans" class="tab-content">
+      <div class="columns">
+        <section class="col sale-col">
+          <h2>Sale</h2>
+          <p class="total-line">Total<span id="planSaleTotal">$0.00</span></p>
+          <div id="planProductList" class="products"></div>
+        </section>
+
+        <section class="col payment-col">
+          <h2>Payment Plans</h2>
+          <p class="accept-label">Split payments available</p>
+
+          <form id="planForm" class="payment-form">
+            <div class="form-group">
+              <label>Cardholder name</label>
+              <input type="text" id="planCardName" placeholder="John Smith" required />
+            </div>
+
+            <div class="form-group">
+              <label>Card number</label>
+              <input type="text" id="planCardNumber" placeholder="4242 4242 4242 4242" maxlength="19" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry</label>
+                <input type="text" id="planExpiry" placeholder="MM/YY" maxlength="5" required />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="planCvv" placeholder="123" maxlength="4" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Installments</label>
+              <select id="installments" required>
+                <option value="1">Pay now (1x)</option>
+                <option value="3">3 installments</option>
+                <option value="6">6 installments</option>
+                <option value="12">12 installments</option>
+              </select>
+            </div>
+
+            <p class="note">Flexible payment plans. Split your payment over time with zero interest on select purchases.</p>
+
+            <button class="btn-submit" type="submit">Setup plan</button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <!-- CRYPTO PAYOUT TAB -->
+    <div id="crypto-payout" class="tab-content">
+      <div class="columns">
+        <section class="col sale-col">
+          <h2>Payout</h2>
+          <p class="total-line">Amount<span id="cryptoTotal">$0.00</span></p>
+          <div id="cryptoProductList" class="products"></div>
+        </section>
+
+        <section class="col payment-col">
+          <h2>Crypto Payout</h2>
+          <p class="accept-label">Binance payout</p>
+
+          <form id="cryptoForm" class="payment-form">
+            <div class="form-group">
+              <label>Wallet address</label>
+              <input type="text" id="walletAddr" placeholder="0x..." required />
+            </div>
+
+            <div class="form-group">
+              <label>Network</label>
+              <select id="network" required>
+                <option value="ETH">Ethereum (ETH)</option>
+                <option value="USDT">Tether (USDT)</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+                <option value="BNB">Binance Coin (BNB)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Crypto amount</label>
+              <input type="text" id="cryptoAmount" placeholder="0.05" required />
+            </div>
+
+            <div class="form-group">
+              <label>Approval code</label>
+              <input type="text" id="approvalCode" placeholder="APP-0001" required />
+            </div>
+
+            <p class="note">Crypto payouts sent via Binance. Demo rate: $1 = €0.92. Funds arrive in 10-30 minutes.</p>
+
+            <button class="btn-submit" type="submit">Send payout</button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <!-- TRANSACTION STORE -->
     <section class="store-section">
       <h2>Transaction store</h2>
       <div class="table-container">
@@ -75,7 +182,7 @@
               <th>Mode</th>
               <th>Type</th>
               <th>Amount</th>
-              <th>Stored wallet data</th>
+              <th>Stored card/wallet data</th>
               <th>Approval code</th>
               <th>Status</th>
             </tr>
