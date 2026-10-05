@@ -1,139 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eastern Protocols - Crypto Payout</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="shell">
-      <header class="topbar">
-        <div>
-          <p class="small-label">Eastern Protocols</p>
-          <h1>Payment terminal</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eastern Protocols - Crypto Payout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div class="header-left">
+        <p class="label">Eastern Protocols</p>
+        <h1>Payment terminal</h1>
+      </div>
+      <div class="header-right">
+        <div class="mode-label">
+          <p class="label">Mode</p>
+          <p class="value">Crypto deposit</p>
         </div>
-        <div class="mode-box">
-          <span class="small-label">Mode</span>
-          <strong>Crypto payout</strong>
-        </div>
-      </header>
+      </div>
+    </header>
 
-      <main class="layout">
-        <section class="panel left-panel">
-          <div class="section-head">
-            <h2>Sale</h2>
-            <span id="totalValue" class="total">Total $0.00</span>
+    <div class="columns">
+      <section class="col sale-col">
+        <h2>Sale</h2>
+        <p class="total-line">Total<span id="saleTotal">$0.00</span></p>
+        <div id="productList" class="products"></div>
+      </section>
+
+      <section class="col payment-col">
+        <h2>Payment</h2>
+        <p class="accept-label">Crypto deposit only</p>
+
+        <form id="paymentForm" class="payment-form">
+          <div class="form-group">
+            <label>Wallet address</label>
+            <input type="text" id="walletAddr" placeholder="0x..." required />
           </div>
 
-          <div id="productList" class="product-list"></div>
-        </section>
-
-        <section class="panel center-panel">
-          <div class="cart-wrap">
-            <div class="section-head small-head">
-              <h3>Cart</h3>
-              <button id="clearCartBtn" class="ghost-btn" type="button">Clear</button>
-            </div>
-
-            <div id="cartItems" class="cart-items"></div>
-
-            <div class="summary-box">
-              <div class="summary-row">
-                <span>Subtotal</span>
-                <strong id="subtotalValue">$0.00</strong>
-              </div>
-              <div class="summary-row">
-                <span>Tax</span>
-                <strong id="taxValue">$0.00</strong>
-              </div>
-              <div class="summary-row total-row">
-                <span>Total</span>
-                <strong id="grandTotalValue">$0.00</strong>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel right-panel">
-          <div class="payment-box">
-            <div class="section-head small-head">
-              <h3>Payment</h3>
-              <span class="chip">Crypto only</span>
-            </div>
-
-            <form id="cryptoForm">
-              <label class="field">
-                <span>Wallet address</span>
-                <input id="walletAddress" type="text" placeholder="0x..." required />
-              </label>
-
-              <label class="field">
-                <span>Network</span>
-                <select id="networkSelect" required>
-                  <option value="ETH">Ethereum</option>
-                  <option value="USDT">Tether (USDT)</option>
-                  <option value="BTC">Bitcoin</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Amount</span>
-                <input id="cryptoAmount" type="text" placeholder="0.05 ETH" required />
-              </label>
-
-              <label class="field">
-                <span>Approval code</span>
-                <input id="approvalCode" type="text" placeholder="APP-0001" required />
-              </label>
-
-              <div class="rate-note">Demo rate: $1 = €0.92</div>
-
-              <button class="submit-btn" type="submit">Process payout</button>
-            </form>
+          <div class="form-group">
+            <label>Network</label>
+            <select id="network" required>
+              <option value="ETH">Ethereum</option>
+              <option value="USDT">Tether (USDT)</option>
+              <option value="BTC">Bitcoin</option>
+            </select>
           </div>
 
-          <div class="terminal-box">
-            <div class="terminal-header">
-              <span class="status-dot"></span>
-              <span>Terminal</span>
-            </div>
-            <div id="terminalMessage" class="terminal-message idle">Awaiting payout</div>
+          <div class="form-group">
+            <label>Crypto amount</label>
+            <input type="text" id="cryptoAmount" placeholder="0.05" required />
           </div>
-        </section>
-      </main>
 
-      <section class="store-panel panel">
-        <div class="section-head small-head">
-          <h3>Transaction store</h3>
-        </div>
+          <div class="form-group">
+            <label>Approval code</label>
+            <input type="text" id="approvalCode" placeholder="APP-0001" required />
+          </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Mode</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Stored wallet data</th>
-                <th>Approval code</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="transactionTableBody">
-              <tr>
-                <td colspan="7" class="empty-row">No sales yet. Take a payment to fill the store.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <p class="note">Demo rate: $1 = €0.92</p>
+
+          <button class="btn-submit" type="submit">Process payout</button>
+        </form>
       </section>
     </div>
 
-    <script src="script.js"></script>
-  </body>
+    <section class="store-section">
+      <h2>Transaction store</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Mode</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Stored wallet data</th>
+              <th>Approval code</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="txTable">
+            <tr class="empty-msg">
+              <td colspan="7">No sales yet. Take a payment to fill the store.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
